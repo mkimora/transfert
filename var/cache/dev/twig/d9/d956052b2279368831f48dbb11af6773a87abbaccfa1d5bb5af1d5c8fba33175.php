@@ -124,6 +124,6 @@ class __TwigTemplate_177d099b4b665f810e977002b5081261f81d83da639e3c608edc8bbd102
 
 </body>
 </html>
-", "@ApiPlatform/Graphiql/index.html.twig", "/home/kimora/tranfert/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/Graphiql/index.html.twig");
+", "@ApiPlatform/Graphiql/index.html.twig", "/home/bass-codeur/sites/transfert/vendor/api-platform/core/src/Bridge/Symfony/Bundle/Resources/views/Graphiql/index.html.twig");
     }
 }

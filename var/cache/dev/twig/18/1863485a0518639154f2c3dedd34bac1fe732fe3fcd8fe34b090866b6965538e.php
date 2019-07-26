@@ -102,6 +102,6 @@ class __TwigTemplate_44a1cef182f913846a4b81923fb2720f07aade09b1267c80cc633000673
     </exception>
 {% endfor %}
 </error>
-", "@Twig/Exception/exception.xml.twig", "/home/kimora/tranfert/vendor/symfony/twig-bundle/Resources/views/Exception/exception.xml.twig");
+", "@Twig/Exception/exception.xml.twig", "/home/bass-codeur/sites/transfert/vendor/symfony/twig-bundle/Resources/views/Exception/exception.xml.twig");
     }
 }

@@ -73,6 +73,6 @@ class __TwigTemplate_8021dfe5c089b88a3bf8afd8c61cfa991c9878a58de155da9e0d9f073bd
 {{ status_code }} {{ status_text }}
 
 */
-", "@Twig/Exception/error.js.twig", "/home/kimora/tranfert/vendor/symfony/twig-bundle/Resources/views/Exception/error.js.twig");
+", "@Twig/Exception/error.js.twig", "/home/bass-codeur/sites/transfert/vendor/symfony/twig-bundle/Resources/views/Exception/error.js.twig");
     }
 }
