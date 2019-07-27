@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 /**
  * @Route("/api")
@@ -20,17 +20,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class PartenaireController extends AbstractController
 {
     /**
-     * @Route("/show", name="show", methods={"GET"})
+     * @Rest\Get("/patenaires")
      */
     public function show(Partenaire $partenaire, PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
     {
+  
+            $partenaireRepository=$this->getDoctrine()->getRepository(Partenaire::class);
+            $partenaire=$partenaireRepository->findAll();
+            return $this->handleView($this->view($partenaire));
+     
        
-        $partenaire = $partenaireRepository->findAll();
-        $data = $serializer->serialize($partenaire, 'json');
-
-        return new Response($data, 200, [
-            'Content-Type' => 'application/json'
-        ]);
+    
     }
 
     /**
@@ -78,7 +78,7 @@ class PartenaireController extends AbstractController
         ];
         return new JsonResponse($data, 500);
     }
-/**
+   /**
      * @Route("/bloquer/{id}", name="update_par", methods={"PUT"})
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $partenaire, ValidatorInterface $validator, EntityManagerInterface $entityManager)
@@ -102,7 +102,35 @@ class PartenaireController extends AbstractController
         $entityManager->flush();
         $data = [
             'status' => 200,
-            'message' => 'Le partenaire a bien été bolquer'
+            'message' => 'Le partenaire a bien été modifié'
+        ];
+        return new JsonResponse($data);
+    }
+/**
+     * @Route("/depot/{id}", name="update_par", methods={"PUT"})
+     */
+    public function depot(Request $request, SerializerInterface $serializer, Partenaire $partenaire, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    {
+        $partenaireUpdate = $entityManager->getRepository(Partenaire::class)->find($partenaire->getId());
+        $data = json_decode($request->getContent());
+        foreach ($data as $key => $value){
+            if($key && !empty($value)) {
+                $name = ucfirst($key);
+                $setter = 'set'.$name;
+                $partenaireUpdate->$setter($value);
+            }
+        }
+        $errors = $validator->validate($partenaireUpdate);
+        if(count($errors)) {
+            $errors = $serializer->serialize($errors, 'json');
+            return new Response($errors, 500, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+        $entityManager->flush();
+        $data = [
+            'status' => 200,
+            'message' => 'Le partenaire a bien été modifié'
         ];
         return new JsonResponse($data);
     }

@@ -55,6 +55,11 @@ class User implements UserInterface
      */
     private $partenaires;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Partenaire", inversedBy="users")
+     */
+    private $partenaire;
+
     public function __construct()
     {
         $this->partenaires = new ArrayCollection();
@@ -196,6 +201,18 @@ class User implements UserInterface
                 $partenaire->setCreatedby(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPartenaire(): ?Partenaire
+    {
+        return $this->partenaire;
+    }
+
+    public function setPartenaire(?Partenaire $partenaire): self
+    {
+        $this->partenaire = $partenaire;
 
         return $this;
     }

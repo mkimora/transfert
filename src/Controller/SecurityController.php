@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Entity\Partenaire;
 
 /**
  * @Route("/api")
@@ -29,8 +30,12 @@ class SecurityController extends AbstractController
             $user->setEtat($values->etat);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
             $user->setRoles($values->roles);
-            $entityManager->persist($user);
-            $entityManager->flush();
+            var_dump($values);
+            $repo=$this->getDoctrine()->getRepository(Partenaire::class);
+            $partenaire=$repo-> find($values->partenaire);
+            $user->getPartenaire($partenaire);
+            //$entityManager->persist($user);
+            //$entityManager->flush();
 
             $data = [
                 'status' => 201,

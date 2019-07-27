@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,6 +59,16 @@ class Partenaire
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="partenaires")
      */
     private $createdby;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="partenaire")
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -155,6 +167,37 @@ class Partenaire
     public function setCreatedby(?User $createdby): self
     {
         $this->createdby = $createdby;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setPartenaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            // set the owning side to null (unless already changed)
+            if ($user->getPartenaire() === $this) {
+                $user->setPartenaire(null);
+            }
+        }
 
         return $this;
     }
