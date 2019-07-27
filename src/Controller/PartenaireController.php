@@ -22,7 +22,7 @@ class PartenaireController extends AbstractController
     /**
      * @Rest\Get("/patenaires")
      */
-    public function show(Partenaire $partenaire, PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
+    public function show(Partenaire $partenaire, PartenaireRepository $partenaireRepository)
     {
   
             $partenaireRepository=$this->getDoctrine()->getRepository(Partenaire::class);
@@ -48,14 +48,16 @@ class PartenaireController extends AbstractController
             $partenaire->setNumcompte($values->numcompte);
             $partenaire->setSolde($values->solde);
             $partenaire->setEtat($values->etat);
-
             $partenaire->setAdresse($values->adresse);
+
+
             var_dump($values);
 
             $repo=$this->getDoctrine()->getRepository(User::class);
             $user=$repo-> find($values->createdby);
             $partenaire->setCreatedby($user);
               $errors = $validator->validate($partenaire);
+
             if(count($errors)) {
                 $errors = $serializer->serialize($errors, 'json');
                 return new Response($errors, 500, [
