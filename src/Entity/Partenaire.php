@@ -48,6 +48,16 @@ class Partenaire
      */
     private $adresse;
 
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
+    private $etat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="partenaires")
+     */
+    private $createdby;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -124,4 +134,30 @@ class Partenaire
 
         return $this;
     }
+
+    public function getEtat(): ?string
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(string $etat): self
+    {
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getCreatedby(): ?User
+    {
+        return $this->createdby;
+    }
+
+    public function setCreatedby(?User $createdby): self
+    {
+        $this->createdby = $createdby;
+
+        return $this;
+    }
+
+   
 }

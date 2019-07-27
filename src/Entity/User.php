@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -47,6 +49,16 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $etat;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Partenaire", mappedBy="createdby")
+     */
+    private $partenaires;
+
+    public function __construct()
+    {
+        $this->partenaires = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -153,6 +165,37 @@ class User implements UserInterface
     public function setEtat(string $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Partenaire[]
+     */
+    public function getPartenaires(): Collection
+    {
+        return $this->partenaires;
+    }
+
+    public function addPartenaire(Partenaire $partenaire): self
+    {
+        if (!$this->partenaires->contains($partenaire)) {
+            $this->partenaires[] = $partenaire;
+            $partenaire->setCreatedby($this);
+        }
+
+        return $this;
+    }
+
+    public function removePartenaire(Partenaire $partenaire): self
+    {
+        if ($this->partenaires->contains($partenaire)) {
+            $this->partenaires->removeElement($partenaire);
+            // set the owning side to null (unless already changed)
+            if ($partenaire->getCreatedby() === $this) {
+                $partenaire->setCreatedby(null);
+            }
+        }
 
         return $this;
     }
