@@ -12,32 +12,34 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use FOS\RestBundle\Controller\Annotations as Rest;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Operation;
 
 /**
  * @Route("/api")
  */
-class PartenaireController extends AbstractController
+class PartenaireController extends AbstractController  
 {
     /**
-     * @Rest\Get("/patenaires")
+     *  @Route("/partenaire", name="liste", methods={"GET"})
      */
-    public function show(Partenaire $partenaire, PartenaireRepository $partenaireRepository)
+    public function show(PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
     {
-  
-            $partenaireRepository=$this->getDoctrine()->getRepository(Partenaire::class);
-            $partenaire=$partenaireRepository->findAll();
-            return $this->handleView($this->view($partenaire));
-     
+             $partenaire=$partenaireRepository->findAll();
+            //var_dump($partenaire);
+            //die();
+           $data      = $serializer->serialize($partenaire,'json',['groups' => ['lister']]);
+            return new Response($data,200,[]);
        
     
     }
 
     /**
      * @Route("/addP", name="add", methods={"POST"})
+     * isGuranted("ROLE_SUPER")
      */
-    public function register(Request $request,  EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
-    {
+    public function ajoutP(Request $request,  EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
+    {  $user = $this->getUser();
         $values = json_decode($request->getContent());
     
         if(isset($values->nompartenaire,$values->numcompte)) {
@@ -45,16 +47,13 @@ class PartenaireController extends AbstractController
             $partenaire->setNompartenaire($values->nompartenaire);
             $partenaire->setRaisonSocial($values->raisonSocial);
             $partenaire->setNinea($values->ninea);
-            $partenaire->setNumcompte($values->numcompte);
+            $partenaire->setNumcompte($values->numcompte);
             $partenaire->setSolde($values->solde);
             $partenaire->setEtat($values->etat);
             $partenaire->setAdresse($values->adresse);
 
-
-            var_dump($values);
-
             $repo=$this->getDoctrine()->getRepository(User::class);
-            $user=$repo-> find($values->createdby);
+            $user=$repo-> find($user->getId());
             $partenaire->setCreatedby($user);
               $errors = $validator->validate($partenaire);
 
@@ -69,7 +68,7 @@ class PartenaireController extends AbstractController
 
             $data = [
                 'status' => 201,
-                'message' => 'Le partenaire a été créé'
+                'message' => 'Le partenaire a été créé'.$user->getId()
             ];
 
             return new JsonResponse($data, 201);
@@ -80,8 +79,9 @@ class PartenaireController extends AbstractController
         ];
         return new JsonResponse($data, 500);
     }
-   /**
-     * @Route("/bloquer/{id}", name="update_par", methods={"PUT"})
+    /**
+     * @Route("/bloquer/{id}", name="par", methods={"PUT"})
+     * isGuranted("ROLE_SUPER")
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $partenaire, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -108,22 +108,37 @@ class PartenaireController extends AbstractController
         ];
         return new JsonResponse($data);
     }
-/**
-     * @Route("/depot/{id}", name="update_par", methods={"PUT"})
+    /**
+     * @Route("/depot", name="upda", methods={"POST"})
+     * isGuranted("ROLE_SUPER")
      */
-    public function depot(Request $request, SerializerInterface $serializer, Partenaire $partenaire, ValidatorInterface $validator, EntityManagerInterface $entityManager)
-    {
-        $partenaireUpdate = $entityManager->getRepository(Partenaire::class)->find($partenaire->getId());
-        $data = json_decode($request->getContent());
-        foreach ($data as $key => $value){
-            if($key && !empty($value)) {
-                $name = ucfirst($key);
-                $setter = 'set'.$name;
-                $partenaireUpdate->$setter($value);
-            }
-        }
-        $errors = $validator->validate($partenaireUpdate);
-        if(count($errors)) {
+    public function depot(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager)
+    {   
+        $user = $this->getUser();
+        $part = new Partenaire();
+        $values = json_decode($request->getContent());
+        $repo = $this->getDoctrine()->getRepository(Partenaire::class);
+        $part = $repo-> findOneBy(['numcompte' => $values->numcompte]);
+        $solde= $part->getSolde();
+        $part->setSolde($values->solde+$solde);
+      
+        if(isset($part)) {
+            $operation = new Operation();
+            $operation->setMontantdeposer($values->solde);
+            $operation->setSoldeAvantDepot($solde);
+            $operation->setDateDepot(new \DateTime('now'));
+          
+          
+            $repo=$this->getDoctrine()->getRepository(Partenaire::class);
+            $partenaire=$repo->find($part);
+            $operation->setPartenaire($partenaire);
+            $entityManager->persist($operation);
+            $entityManager->flush();
+
+              $errors = $validator->validate($partenaire);
+
+        $errors = $validator->validate($part);
+         if(count($errors)) {
             $errors = $serializer->serialize($errors, 'json');
             return new Response($errors, 500, [
                 'Content-Type' => 'application/json'
@@ -132,10 +147,9 @@ class PartenaireController extends AbstractController
         $entityManager->flush();
         $data = [
             'status' => 200,
-            'message' => 'Le partenaire a bien été modifié'
-        ];
+             'message' => 'Le partenaire a bien été modifié '.$solde.'_____'.$user->getId()];
         return new JsonResponse($data);
     }
 
 }
-
+}

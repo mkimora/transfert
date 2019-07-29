@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,41 +18,49 @@ class Partenaire
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"lister"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"lister"})
      */
     private $nompartenaire;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"lister"})
      */
     private $raisonSocial;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"lister"})
      */
     private $ninea;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"lister"})
      */
     private $numcompte;
 
     /**
      * @ORM\Column(type="bigint")
+     * @Groups({"lister"})
      */
     private $solde;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"lister"})
      */
     private $adresse;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups({"lister"})
      */
     private $etat;
 
@@ -65,9 +74,15 @@ class Partenaire
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Operation", mappedBy="Partenaire")
+     */
+    private $operations;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->operations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,6 +211,37 @@ class Partenaire
             // set the owning side to null (unless already changed)
             if ($user->getPartenaire() === $this) {
                 $user->setPartenaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Operation[]
+     */
+    public function getOperations(): Collection
+    {
+        return $this->operations;
+    }
+
+    public function addOperation(Operation $operation): self
+    {
+        if (!$this->operations->contains($operation)) {
+            $this->operations[] = $operation;
+            $operation->setPartenaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperation(Operation $operation): self
+    {
+        if ($this->operations->contains($operation)) {
+            $this->operations->removeElement($operation);
+            // set the owning side to null (unless already changed)
+            if ($operation->getPartenaire() === $this) {
+                $operation->setPartenaire(null);
             }
         }
 
