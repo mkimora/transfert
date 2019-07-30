@@ -21,11 +21,12 @@ use App\Entity\Operation;
 class PartenaireController extends AbstractController  
 {
     /**
-     *  @Route('/partenaire'), name="liste", methods={"GET"})
+     *  @Route("/partenaire", name="liste", methods={"GET"})
      */
     public function show(PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
     {
-           $partenaire=$partenaireRepository->findAll();
+             $partenaire=$partenaireRepository->findAll();
+           
            $data      = $serializer->serialize($partenaire,'json',['groups' => ['lister']]);
             return new Response($data,200,[]);
        

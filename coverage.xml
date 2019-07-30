@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Project Test Suite" tests="1" assertions="0" errors="1" failures="0" skipped="0" time="0.164626">
+    <testsuite name="App\Tests\SecurityControllerTest" file="/home/bass-codeur/sites/transfert/tests/SecurityControllerTest.php" tests="1" assertions="0" errors="1" failures="0" skipped="0" time="0.164626">
+      <testcase name="testSomething" class="App\Tests\SecurityControllerTest" classname="App.Tests.SecurityControllerTest" file="/home/bass-codeur/sites/transfert/tests/SecurityControllerTest.php" line="9" assertions="0" time="0.164626">
+        <error type="Symfony\Component\Config\Exception\LoaderLoadException">App\Tests\SecurityControllerTest::testSomething
+Symfony\Component\Config\Exception\LoaderLoadException: [Syntax Error] Expected PlainValue, got ''' at position 7 in method App\Controller\PartenaireController::show() in /home/bass-codeur/sites/transfert/config/routes/../../src/Controller/ (which is being imported from "/home/bass-codeur/sites/transfert/config/routes/annotations.yaml"). Make sure annotations are installed and enabled.
+
+/home/bass-codeur/sites/transfert/vendor/symfony/config/Loader/FileLoader.php:166
+/home/bass-codeur/sites/transfert/vendor/symfony/config/Loader/FileLoader.php:90
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/Loader/YamlFileLoader.php:190
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/Loader/YamlFileLoader.php:84
+/home/bass-codeur/sites/transfert/vendor/symfony/config/Loader/FileLoader.php:151
+/home/bass-codeur/sites/transfert/vendor/symfony/config/Loader/FileLoader.php:90
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/Loader/GlobFileLoader.php:32
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/RouteCollectionBuilder.php:372
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/RouteCollectionBuilder.php:62
+/home/bass-codeur/sites/transfert/src/Kernel.php:50
+/home/bass-codeur/sites/transfert/vendor/symfony/framework-bundle/Kernel/MicroKernelTrait.php:92
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/Loader/ObjectRouteLoader.php:70
+/home/bass-codeur/sites/transfert/vendor/symfony/config/Loader/DelegatingLoader.php:40
+/home/bass-codeur/sites/transfert/vendor/symfony/framework-bundle/Routing/DelegatingLoader.php:72
+/home/bass-codeur/sites/transfert/vendor/symfony/framework-bundle/Routing/Router.php:71
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/Router.php:397
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/Router.php:358
+/home/bass-codeur/sites/transfert/vendor/symfony/config/ResourceCheckerConfigCacheFactory.php:43
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/Router.php:366
+/home/bass-codeur/sites/transfert/vendor/symfony/routing/Router.php:254
+/home/bass-codeur/sites/transfert/vendor/api-platform/core/src/Bridge/Symfony/Routing/Router.php:101
+/home/bass-codeur/sites/transfert/vendor/api-platform/core/src/Hydra/EventListener/AddLinkHeaderListener.php:41
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/Debug/WrappedListener.php:126
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/EventDispatcher.php:260
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/EventDispatcher.php:235
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/EventDispatcher.php:75
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/Debug/TraceableEventDispatcher.php:168
+/home/bass-codeur/sites/transfert/vendor/symfony/http-kernel/HttpKernel.php:190
+/home/bass-codeur/sites/transfert/vendor/symfony/http-kernel/HttpKernel.php:172
+/home/bass-codeur/sites/transfert/vendor/symfony/http-kernel/HttpKernel.php:68
+/home/bass-codeur/sites/transfert/vendor/symfony/http-kernel/EventListener/ExceptionListener.php:66
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/Debug/WrappedListener.php:126
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/EventDispatcher.php:260
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/EventDispatcher.php:235
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/EventDispatcher.php:75
+/home/bass-codeur/sites/transfert/vendor/symfony/event-dispatcher/Debug/TraceableEventDispatcher.php:168
+/home/bass-codeur/sites/transfert/vendor/symfony/http-kernel/HttpKernel.php:222
+/home/bass-codeur/sites/transfert/vendor/symfony/http-kernel/HttpKernel.php:79
+/home/bass-codeur/sites/transfert/vendor/symfony/http-kernel/Kernel.php:198
+/home/bass-codeur/sites/transfert/vendor/symfony/http-kernel/Client.php:65
+/home/bass-codeur/sites/transfert/vendor/symfony/framework-bundle/Client.php:131
+/home/bass-codeur/sites/transfert/vendor/symfony/browser-kit/Client.php:407
+/home/bass-codeur/sites/transfert/tests/SecurityControllerTest.php:13
+</error>
+      </testcase>
+    </testsuite>
+  </testsuite>
+</testsuites>
