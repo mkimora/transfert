@@ -65,7 +65,7 @@ class Partenaire
     private $etat;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="partenaires")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="partenaires" )
      */
     private $createdby;
 

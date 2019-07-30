@@ -46,6 +46,7 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/register", name="register", methods={"POST"})
+     *  isGranted("ROLE_SUPER","ROLE_USER")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $entityManager)
     { $status='statu' ;
@@ -59,10 +60,12 @@ class SecurityController extends AbstractController
             $user->setEtat($values->etat);
             $user->setPassword($passwordEncoder->encodePassword($user, $values->password));
             $user->setRoles($values->roles);
-
+    
+            if(!empty($values->partenaire)){
             $repo=$this->getDoctrine()->getRepository(Partenaire::class);
             $partenaire=$repo->find($values->partenaire);
             $user->setPartenaire($partenaire); 
+           }
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -87,7 +90,7 @@ class SecurityController extends AbstractController
      */
     public function login(Request $request, JWTEncoderInterface  $JWTEncoder)
     { 
-       // $content = $this->get("request")->getContent();
+   
        $values = json_decode($request->getContent());
         $username   = $values->username; // json-string
         $password   = $values->password; // json-string

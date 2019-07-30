@@ -35,7 +35,8 @@ class PartenaireController extends AbstractController
 
     /**
      * @Route("/addP", name="add", methods={"POST"})
-     * isGuranted("ROLE_SUPER")
+     * isGranted("ROLE_SUPER")
+     * isGranted("ROLE_ADMIN")
      */
     public function ajoutP(Request $request,  EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {  $user = $this->getUser();
@@ -67,7 +68,7 @@ class PartenaireController extends AbstractController
 
             $data = [
                 'status' => 201,
-                'message' => 'Le partenaire a été créé'.$user->getId()
+                'message' => 'Le partenaire a été créé par '.$user->getNom().' '.$user->getPrenom()
             ];
 
             return new JsonResponse($data, 201);
@@ -80,7 +81,7 @@ class PartenaireController extends AbstractController
     }
     /**
      * @Route("/bloquer/{id}", name="par", methods={"PUT"})
-     * isGuranted("ROLE_SUPER")
+     * isGranted("ROLE_SUPER")
      */
     public function update(Request $request, SerializerInterface $serializer, Partenaire $partenaire, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {
@@ -109,12 +110,12 @@ class PartenaireController extends AbstractController
     }
     /**
      * @Route("/depot", name="upda", methods={"POST"})
-     * isGuranted("ROLE_SUPER")
+     *
      */
     public function depot(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $entityManager)
     {   
         $user = $this->getUser();
-        $part = new Partenaire();
+        
         $values = json_decode($request->getContent());
         $repo = $this->getDoctrine()->getRepository(Partenaire::class);
         $part = $repo-> findOneBy(['numcompte' => $values->numcompte]);
@@ -146,7 +147,7 @@ class PartenaireController extends AbstractController
         $entityManager->flush();
         $data = [
             'status' => 200,
-             'message' => 'Le partenaire a bien été modifié '.$solde.'_____'.$user->getId()];
+             'message' => 'Le depot a éte fait avec succes '.'par '.$user->getNom().' '.$user->getPrenom()];
         return new JsonResponse($data);
     }
 
