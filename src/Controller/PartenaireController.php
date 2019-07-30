@@ -21,13 +21,11 @@ use App\Entity\Operation;
 class PartenaireController extends AbstractController  
 {
     /**
-     *  @Route("/partenaire", name="liste", methods={"GET"})
+     *  @Route('/partenaire'), name="liste", methods={"GET"})
      */
     public function show(PartenaireRepository $partenaireRepository, SerializerInterface $serializer)
     {
-             $partenaire=$partenaireRepository->findAll();
-            //var_dump($partenaire);
-            //die();
+           $partenaire=$partenaireRepository->findAll();
            $data      = $serializer->serialize($partenaire,'json',['groups' => ['lister']]);
             return new Response($data,200,[]);
        
@@ -47,7 +45,7 @@ class PartenaireController extends AbstractController
             $partenaire->setNompartenaire($values->nompartenaire);
             $partenaire->setRaisonSocial($values->raisonSocial);
             $partenaire->setNinea($values->ninea);
-            $partenaire->setNumcompte($values->numcompte);
+            $partenaire->setNumcompte($values->numcompte);
             $partenaire->setSolde($values->solde);
             $partenaire->setEtat($values->etat);
             $partenaire->setAdresse($values->adresse);
