@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,6 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Partenaire;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+
 
 /**
  * @Route("/api")
@@ -26,6 +28,22 @@ class SecurityController extends AbstractController
     {
         $this->passwordEncoder = $passwordEncoder;
     }
+     /**
+     * @Route("/liste", name="list",methods={"GET"})
+     */
+    
+
+    public function index(UserRepository $userRepository, SerializerInterface $serializer)
+    {
+        $users = $userRepository->findAll();
+        $data = $serializer->serialize($users, 'json',['groups' => ['lister']]);
+
+        return new Response($data, 200, [
+            'Content-Type' => 'application/json'
+        ]);
+    }
+
+
     /**
      * @Route("/register", name="register", methods={"POST"})
      */
@@ -71,7 +89,7 @@ class SecurityController extends AbstractController
     { 
        // $content = $this->get("request")->getContent();
        $values = json_decode($request->getContent());
-        $username   =$values->username; // json-string
+        $username   = $values->username; // json-string
         $password   = $values->password; // json-string
 
             $repo = $this->getDoctrine()->getRepository(User::class);
@@ -82,14 +100,18 @@ class SecurityController extends AbstractController
                     ]);
             }
 
-            $isValid =$this->passwordEncoder
+            $isValid = $this->passwordEncoder
             ->isPasswordValid($user, $password);
             if(!$isValid){ 
                 return $this->json([
                     'message' => 'Mot de passe incorect'
                 ]);
             }
-
+            if($user->getEtat()=="bloquer"){
+                return $this->json([
+                    'message' => 'ACCÈS REFUSÉ'
+                ]);
+            }
             $token = $JWTEncoder->encode([
                 'username' => $user->getUsername(),
                 'exp' => time() + 86400 // 1 day expiration
@@ -129,4 +151,10 @@ class SecurityController extends AbstractController
         ];
         return new JsonResponse($data);
     }
+
+   
+
+
+
 }
+
